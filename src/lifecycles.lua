@@ -149,7 +149,7 @@ function lifecycle_handler.infoChanged(driver, device, event, args)
   if old_email ~= new_email then
     log.info("Authorized email has changed. Re-initializing device...")
     -- Call the new centralized initialization function.
-    lifecycle_handler:init(driver, device)
+    lifecycle_handler.init(driver, device)
   end
 end
 

@@ -34,8 +34,8 @@ function GenvexConnection.new(driver, authorized_email)
     self.client_id = binary.pack_u32_be(math.random(0, 0xFFFFFFFF))
     self.server_id = string.char(0, 0, 0, 0)
 
-    self.refresh_callback = function() end
     self.connected_callback = function() end
+    self.refresh_callback = function() end
     self.model_set_callback = function() end
 
     self.device_id = nil
@@ -238,7 +238,7 @@ function GenvexConnection:refresh()
     end
 
     if self:_should_reconnect() then
-        log.warn("Connection timed out. Reconnecting...")
+        log.warn("Connection timed out. Reconnecting... refresh")
         self.refresh_callback = callback
         self:_connect_to_device()
     else
@@ -304,10 +304,10 @@ function GenvexConnection:_process_received_message(message, address)
                 log.info("Successfully connected to device. Pinging to get model info.")
                 self:_send_ping()
             else
-                self.refresh_callback()
-                self.refresh_callback = function()  end
                 self.connected_callback()
                 self.connected_callback = function()  end
+                self.refresh_callback()
+                self.refresh_callback = function()  end
             end
         else
             log.error("Authentication failed. Check authorized email.")
@@ -369,10 +369,10 @@ function GenvexConnection:_process_ping_payload(payload)
 
             self.model_set_callback()
             self.model_set_callback = function()  end
-            self.refresh_callback()
-            self.refresh_callback = function()  end
             self.connected_callback()
             self.connected_callback = function()  end
+            self.refresh_callback()
+            self.refresh_callback = function()  end
 
             local model_name = self.model_adapter:getModelName() or "Unknown"
             log.debug(string.format("Loaded model for %s", model_name))
@@ -495,15 +495,14 @@ function GenvexConnection:set_setpoint(setpointKey, newValue)
     })
     payload:setData(command:buildCommand())
 
-    local packet = protocol.GenvexPacket.build_packet(
-            self.client_id,
-            self.server_id,
-            protocol.PacketType.DATA,
-            3,
-            { payload }
-    )
-
     local callback = function()
+        local packet = protocol.GenvexPacket.build_packet(
+                self.client_id,
+                self.server_id,
+                protocol.PacketType.DATA,
+                3,
+                { payload }
+        )
         local ok, err = self.sock:sendto(packet, self.device_ip, self.device_port)
         if not ok then
             log.error("Failed to send setpoint packet: ", err or "unknown error")
@@ -512,7 +511,7 @@ function GenvexConnection:set_setpoint(setpointKey, newValue)
     end
 
     if self:_should_reconnect() then
-        log.warn("Connection timed out. Reconnecting...")
+        log.warn("Connection timed out. Reconnecting... set_setpoint")
         self.connected_callback = callback
         self:_connect_to_device()
     else
