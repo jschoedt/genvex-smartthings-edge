@@ -1,0 +1,50 @@
+name: genvex-hvac.v1
+components:
+  - id: main
+    capabilities:
+    - id: fanSpeed
+      version: 1
+    - id: relativeHumidityMeasurement
+      version: 1
+    - id: temperatureMeasurement
+      version: 1
+    - id: temperatureSetpoint
+      config:
+        values:
+          - key: temperatureSetpoint.value
+            range:
+              - 10
+              - 30
+      version: 1
+    - id: refresh
+      version: 1
+    - id: filterState
+      version: 1
+    categories:
+    - name: Vent
+  - id: reheating
+    capabilities:
+    - id: circleconnect14093.toggleButton
+      version: 1
+  - id: humidity
+    capabilities:
+    - id: circleconnect14093.toggleButton
+      version: 1
+  - id: status
+    capabilities:
+      - id: circleconnect14093.dynamicStatusDisplay
+        version: 1
+  - id: mode
+    capabilities:
+      - id: circleconnect14093.dynamicStatusDisplay
+        version: 1
+
+preferences:
+  - title: "Genvex Authorized Email"
+    name: "email"
+    description: "The email address authorized to connect to your Genvex device."
+    required: true
+    preferenceType: "string"
+    definition:
+      stringType: "text"
+      default: ""

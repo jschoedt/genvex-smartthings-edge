@@ -1,0 +1,16 @@
+id: circleconnect14093.dynamicStatusDisplay
+version: 1
+dashboard:
+  states:
+    - label: "{{label.value}}: {{statusText.value}}"
+detailView:
+  - label: "Status"
+    displayType: "state"
+    state:
+      label: "{{label.value}}: {{statusText.value}}"
+automation:
+  conditions:
+    - label: "Current Status"
+      displayType: "textField"
+      textField:
+        value: "statusText.value"

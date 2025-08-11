@@ -1,0 +1,22 @@
+id: circleconnect14093.dynamicStatusDisplay
+version: 1
+name: Dynamic Status Display
+attributes:
+  label:
+    schema:
+      type: object
+      properties:
+        value:
+          type: string
+      required:
+        - value
+      additionalProperties: false
+  statusText:
+    schema:
+      type: object
+      properties:
+        value:
+          type: string
+      required:
+        - value
+      additionalProperties: false

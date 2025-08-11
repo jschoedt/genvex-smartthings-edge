@@ -1,0 +1,44 @@
+id: circleconnect14093.toggleButton
+version: 1
+dashboard:
+  states:
+    - label: "{{label.value}}: {{state.value}}"
+detailView:
+  - label: "{{label.value}}"
+    displayType: "toggleSwitch"
+    toggleSwitch:
+      command:
+        name: "setState"
+        argumentType: "string"
+        on: "on"
+        off: "off"
+      state:
+        value: "state.value"
+        on: "on"
+        off: "off"
+automation:
+  conditions:
+    - label: "State"
+      displayType: "list"
+      list:
+        alternatives:
+          - key: "on"
+            value: "On"
+            type: "active"
+          - key: "off"
+            value: "Off"
+            type: "inactive"
+        value: "state.value"
+        valueType: "string"
+  actions:
+    - label: "Set State"
+      displayType: "list"
+      list:
+        command: "setState"
+        alternatives:
+          - key: "on"
+            value: "On"
+            type: "active"
+          - key: "off"
+            value: "Off"
+            type: "inactive"

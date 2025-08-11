@@ -1,0 +1,32 @@
+id: circleconnect14093.toggleButton
+version: 1
+name: Toggle Button
+attributes:
+  label:
+    schema:
+      type: object
+      properties:
+        value:
+          type: string
+      required:
+        - value
+      additionalProperties: false
+  state:
+    schema:
+      type: object
+      properties:
+        value:
+          type: string
+          enum: ["on", "off"]
+      required:
+        - value
+      additionalProperties: false
+    setter: "setState"
+commands:
+  setState:
+    name: "setState"
+    arguments:
+      - name: "state"
+        schema:
+          type: string
+          enum: ["on", "off"]

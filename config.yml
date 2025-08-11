@@ -1,0 +1,5 @@
+name: 'Genvex HVAC'
+packageKey: 'genvex.hvac'
+permissions:
+  lan: {}
+  discovery: {}
