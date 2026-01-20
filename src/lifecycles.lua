@@ -17,16 +17,22 @@ function lifecycle_handler.init(driver, device)
   local email = device.preferences.email
   if not email or email == "" then
     log.error("User email is not configured for this device. Connection will not be established.")
+    device:offline() -- Mark device as offline so the user knows action is needed
     return
   end
   log.info("Using authorized email: " .. email)
 
   local conn = device:get_field("connection")
-  if not conn then
-    log.error("No connection found for device: " .. device.id)
-    return
-  end
 
+  -- If connection object is missing (due to driver restart or failed discovery cache)
+  if not conn then
+    log.info("No connection field found, creating new GenvexConnection instance...")
+    local GenvexConnection = require "nabto.genvex_connection"
+    conn = GenvexConnection.new(driver, email)
+    conn:start()
+    device:set_field("connection", conn)
+  end
+  
   conn.model_set_callback = function()
     log.info("Connection attempt finished. Connected: " .. tostring(conn.is_connected))
 
@@ -113,7 +119,6 @@ function lifecycle_handler.init(driver, device)
 
 
     -- IMPORTANT: Mark device as online and schedule tasks regardless of connection status.
-    -- This ensures the device is responsive in the app and ready for the next attempt.
     -- This ensures the device is responsive in the app and ready for the next attempt.
     device:online()
 
